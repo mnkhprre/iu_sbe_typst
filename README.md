@@ -1,93 +1,324 @@
-# İstanbul Üniversitesi SBE Tez Taslağı Projesi
+# İÜ SBE — Typst Tez Şablonu
 
-Bu proje, İstanbul Üniversitesi Sosyal Bilimler Enstitüsü tez yönergesine göre hazırlanmış Typst tez şablonudur. Eski XeLaTeX kaynakları `bolum/tex/` altında, güncel Typst kaynakları ise `bolum/typ/` altında bulunur.
+[![Typst](https://img.shields.io/badge/Typst-%E2%89%A50.15-23B3A9?style=flat-square)](https://typst.app)
+[![Dil: Türkçe](https://img.shields.io/badge/dil-T%C3%BCrk%C3%A7e-2C2A25?style=flat-square)](#)
+[![Derleme: kararlı](https://img.shields.io/badge/derleme-ba%C5%9Far%C4%B1l%C4%B1-2E7D32?style=flat-square)](#h%C4%B1zl%C4%B1-ba%C5%9Flang%C4%B1%C3%A7)
+
+İstanbul Üniversitesi Sosyal Bilimler Enstitüsü (SBE) **tez hazırlama ve biçimlendirme yönergesine** göre hazırlanmış, [Typst](https://typst.app) ile çalışan tez şablonu. Şablon; ön kısım, metin kısmı, kaynakça, ekler ve özgeçmiş bölümlerini yönergedeki madde sırasına göre otomatik olarak üretir ve filoloji / mısıroloji / hititoloji çalışmaları için hazır transliterasyon blokları içerir.
+
+> [!WARNING]
+> Bu depo **İstanbul Üniversitesi veya Sosyal Bilimler Enstitüsü'nün resmi şablonu değildir**. Öğrenci çalışması olarak, yönergedeki kuralları birebir modellemek amacıyla hazırlanmıştır. Resmî bir güncelleme veya onay süreci yoktur; kullanılan yönerge için bkz. [`tez_hazırlama_yönergesi.pdf`](tez_hazırlama_yönergesi.pdf).
+
+## İçindekiler
+
+- [Gereksinimler](#gereksinimler)
+- [Hızlı başlangıç](#hızlı-başlangıç)
+- [Depo yapısı](#depo-yapısı)
+- [Belge akışı: `main.typ` sırası](#belge-akışı-maintyp-sırası)
+- [Yönerge madde eşlemesi](#yönerge-madde-eşlemesi)
+- [Tipografi ve sayfa kuralları](#tipografi-ve-sayfa-kuralları)
+- [Yardımcı fonksiyonlar](#yardımcı-fonksiyonlar)
+- [Filolojik transliterasyon blokları](#filolojik-transliterasyon-blokları)
+- [Tablo, şekil ve çapraz referans](#tablo-şekil-ve-çapraz-referans)
+- [Kaynakça](#kaynakça)
+- [Yeni bölüm ekleme](#yeni-bölüm-ekleme)
+- [Derleme sorunlarını giderme](#derleme-sorunlarını-giderme)
+- [Geliştirme notları](#geliştirme-notları)
+
+---
+
+## Gereksinimler
+
+| Gereksinim | Not |
+| --- | --- |
+| [Typst CLI](https://github.com/typst/typst) **0.15+** | `typst --version` ile doğrulayın. Şablon 0.15.1 ile test edilmiştir. |
+| **Times New Roman** | Gövde metni. macOS/Windows'ta hazır; Linux'ta `ttf-mscorefonts-installer` veya benzeri paket gerekir. Yedek olarak `Times` aranır. |
+| **Antinoou** | Yalnızca Mısırca transliterasyon bloğu (`#eb`) için. |
+| **Aegyptus** | Yalnızca hiyeroglif çıktısı (`#hiero`) için. |
+| **Noto Sans Cuneiform** | Yalnızca çivi yazısı çıktısı (`#cunei`) için. |
+
+> Fontlar sistemde yoksa Typst derlemeyi durdurmaz; yalnızca uyarı verir ve metin yedek fontla dizilir. Enstitüye teslim edilecek PDF'te hatasız görünüm için yukarıdaki fontların kurulu olduğundan emin olun.
 
 ## Hızlı başlangıç
 
-Proje kök dizinindeyken ana belgeyi derleyin:
+Depo kök dizinindeyken:
 
 ```sh
-typst compile --diagnostic-format short bolum/typ/thesis.typ thesis.pdf
+# Tek seferlik derleme
+typst compile bolum/typ/main.typ main.pdf
+
+# Kaydettiğinizde otomatik yeniden derleme (izleme modu)
+typst watch bolum/typ/main.typ main.pdf
 ```
 
-PDF’yi açmadan yalnızca hata kontrolü yapmak için aynı komut yeterlidir. `thesis.typ` ana dosyadır; alt dosyalar doğrudan değil, bu dosyaya `#include` ile eklenir.
+Yalnızca hata denetimi yapmak, PDF üretmemek istiyorsanız çıktı olarak geçici bir yol verin (macOS/Linux):
 
-## Dosya yapısı
+```sh
+typst compile --diagnostic-format short bolum/typ/main.typ /dev/null
+```
 
-- `bolum/typ/thesis.typ`: Tezin sırasını ve ana ayarlarını yönetir.
-- `bolum/typ/iusosbil.typ`: Sayfa, yazı, paragraf, başlık, dipnot ve yardımcı komut ayarları.
-- `bolum/typ/kapak.typ`: İç kapak.
-- `bolum/typ/chap_frontmatter.typ`: Öz, Abstract, önsöz ve listeler.
-- `bolum/typ/chap_intro.typ`: Giriş.
-- `bolum/typ/chap_1.typ`, `chap_2.typ`, `chap_3.typ`: Tez bölümleri.
-- `bolum/typ/chap_result.typ`: Sonuç.
-- `bolum/typ/bibliyografi.typ`: Kaynakça.
-- `bolum/typ/chap_attach.typ`: Ekler.
-- `bolum/typ/CV.typ`: Özgeçmiş.
-- `bolum/typ/kaynakca.bib`: BibLaTeX kaynakça verisi.
-- `tez_hazırlama_yönergesi.pdf`: Biçimlendirme için başvurulan yönerge.
+**Editör seçenekleri**
 
-## Yeni bölüm ekleme
+- [VS Code + Tinymist Typst](https://github.com/Myriad-Dreamin/tinymist) veya [Typst Preview](https://github.com/enter-tainer/typst-preview): kaydettiğinizde canlı önizleme.
+- [typst.app](https://typst.app) web uygulaması: kurulum gerektirmez, dosyaları sürükleyip bırakabilirsiniz.
+- Komut satırı: yukarıdaki `watch` komutu yeterlidir.
 
-1. Yeni dosyayı `bolum/typ/chap_4.typ` gibi oluşturun.
-2. Bölüm başlığını `#heading(level: 1)[...]` ile yazın.
-3. Alt başlıklar için `level: 2`, `level: 3` ve `level: 4` kullanın.
-4. Dosyayı `thesis.typ` içinde uygun sıraya ekleyin:
+İlk derlemeden sonra kök dizinde `main.pdf` üretilir; repodaki [`main.pdf`](main.pdf) güncel şablonun örnek çıktısıdır.
+
+## Depo yapısı
+
+```
+iu_sbe_typst/
+├── main.pdf                        # Örnek derlenmiş çıktı
+├── tez_hazırlama_yönergesi.pdf     # Biçimlendirme esasının alındığı yönerge
+├── README.md
+├── .gitignore
+└── bolum/typ/
+    ├── main.typ                    # GİRİŞ NOKTASI — sırayı ve şablonu burada tanımlarsınız
+    ├── iusosbil.typ                # Şablon fonksiyonu + tüm stil ve yardımcı komutlar
+    ├── kapak.typ                   # İç kapak (Madde 9)
+    ├── chap_approve.typ            # Tez onay sayfası ve jüri imza tablosu (Madde 10)
+    ├── chap_frontmatter.typ        # Öz, Abstract, Önsöz, İçindekiler, listeler (Madde 11–15)
+    ├── chap_intro.typ              # Giriş — numarasız (Madde 16/a, 17)
+    ├── chap_1.typ                  # Bölüm 1 (Madde 16/c)
+    ├── chap_2.typ                  # Bölüm 2 — tablo/şekil örnekleri (Madde 16/c)
+    ├── chap_3.typ                  # Bölüm 3 (Madde 16/c)
+    ├── chap_result.typ             # Sonuç ve Öneriler — numarasız (Madde 16/e)
+    ├── bibliyografi.typ            # Kaynakça görünümü (Madde 22)
+    ├── chap_attach.typ             # Ekler (Madde 23)
+    ├── CV.typ                      # Özgeçmiş — şablonu BOŞ, doldurulacak
+    └── kaynakca.bib                # BibTeX kaynak verisi
+```
+
+Kural basittir: **sadece `main.typ` ve ilgili bölüm dosyalarını düzenlersiniz.** Stil, ölçü, başlık ve dipnot kuralları `iusosbil.typ` içinde merkezîdir; bölüm dosyalarında tekrar tanımlamak yerine oradan değiştirin.
+
+## Belge akışı: `main.typ` sırası
+
+`main.typ` iki parçadan oluşur: şablonu tüm belgeye giydiren `#show` kuralı ve dosyaları sırayla içeren `#include` satırları.
 
 ```typst
-#include "chap_4.typ"
-#pagebreak()
+#import "iusosbil.typ": iusosbil_tez
+
+#show: iusosbil_tez.with(
+  yazar: "Adı SOYADI",
+  tez-turu: "DOKTORA TEZİ"
+)
+
+// A. ÖN KISIM  (Madde 8/A)
+#include "kapak.typ"            // Madde 9  — sayfa numarasız (i sayılır)
+#include "chap_approve.typ"     // Madde 10 — sayfa numarasız (ii sayılır)
+
+#set page(numbering: "i", number-align: bottom + center)
+#counter(page).update(3)        // iii'ten başlat
+#include "chap_frontmatter.typ" // Madde 11–15
+
+// B. METİN KISMI (Madde 8/B)
+#set page(numbering: "1", number-align: bottom + center)
+#counter(page).update(1)        // Giriş'te 1'den başlat
+
+#include "chap_intro.typ"       // Madde 16/a, 17
+#include "chap_1.typ"           // Madde 16/c, d
+#include "chap_2.typ"
+#include "chap_3.typ"
+#include "chap_result.typ"      // Madde 16/e
+#include "bibliyografi.typ"     // Madde 22
+#include "chap_attach.typ"      // Madde 23
+#include "CV.typ"               // Madde 8/B — doktora tezleri için zorunlu
 ```
 
-Başlık numaraları otomatik olarak `1`, `1.1`, `1.1.1` biçiminde üretilir.
+| Aşama | Sayfa numarası | Kaynak |
+| --- | --- | --- |
+| İç kapak + tez onay sayfası | görünmez (i–ii sayılır) | `kapak.typ`, `chap_approve.typ` |
+| Öz → Kısaltmalar listesi | Roma rakamı, alt ortada (iii'ten) | `chap_frontmatter.typ` |
+| Giriş → Özgeçmiş | Arap rakamı, alt ortada (1'den) | `chap_*.typ`, `CV.typ` |
 
-## Tipografi kuralları
+`yazar` ve `tez-turu` parametreleri şimdilik yalnızca şablon çağrısında bilgi taşır; **iç kapak ve onay sayfasındaki ad, numara, unvan ve tarih bilgilerini ilgili dosyalarda elle doldurun** (`kapak.typ`, `chap_approve.typ`, `chap_frontmatter.typ`).
 
-- Normal metin: Times New Roman, 12 punto, 1,5 satır.
-- Dipnot: 10 punto, tek satır.
-- Mısırca ve Hititçe transliterasyon blokları: Times New Roman, 11 punto, tek satır.
-- Başlıklar: 14 punto, kalın.
-- Sayfa numaraları alt ortadadır; ön kısım Roma rakamı, metin kısmı Arap rakamı kullanır.
+## Yönerge madde eşlemesi
 
-Bu ayarları bölüm dosyalarında tekrar tanımlamak yerine `iusosbil.typ` içinden değiştirin. Sadece özel bir blok için farklı değer gerekiyorsa o bloğun içine yerel `#set text(...)` veya `#set par(...)` ekleyin.
+| Yönerge | İçerik | Dosya |
+| --- | --- | --- |
+| Madde 3/a–b | Sayfa numarası görünürlüğü, tablo/şekil numaraları | `main.typ`, `iusosbil.typ` |
+| Madde 4/a | Kenar boşlukları (üst 4 cm, alt 2,5 cm, sol 4 cm, sağ 2,5 cm) | `iusosbil.typ` |
+| Madde 4/b | İki yana yaslı, 1,5 satır aralığı | `iusosbil.typ` |
+| Madde 5/a | Başlık biçimi ve hiyerarşisi | `iusosbil.typ` |
+| Madde 8/A–B | Ön kısım / metin kısımı kurgusu | `main.typ` |
+| Madde 9 | İç kapak | `kapak.typ` |
+| Madde 10 | Tez onay sayfası ve jüri imza tablosu | `chap_approve.typ` |
+| Madde 11 | Öz (TR) ve Abstract (EN), en fazla 250 kelime | `chap_frontmatter.typ` |
+| Madde 12 | Önsöz (en fazla 2 sayfa) | `chap_frontmatter.typ` |
+| Madde 13 | İçindekiler | `chap_frontmatter.typ` |
+| Madde 14 | Şekiller ve tablolar listesi (otomatik) | `chap_frontmatter.typ` |
+| Madde 15 | Kısaltmalar listesi | `chap_frontmatter.typ` |
+| Madde 16/a–b | Giriş | `chap_intro.typ` |
+| Madde 16/c–d | En az üç bölüm (Giriş hariç) | `chap_1..3.typ` |
+| Madde 16/e | Sonuç ve öneriler | `chap_result.typ` |
+| Madde 17 | Giriş ve sonuç numaralandırılmaz | ilgili bölüm dosyaları |
+| Madde 18/a, 18/e | Kısa alıntılar ve blok aktarma | `chap_1.typ` örneği |
+| Madde 19/a | Dipnot: 10 punto, tek satır | `iusosbil.typ` |
+| Madde 22 | Kaynakça | `bibliyografi.typ`, `kaynakca.bib` |
+| Madde 23 | Ekler | `chap_attach.typ` |
 
-## Filolojik dizgi yardımcıları
+## Tipografi ve sayfa kuralları
 
-`thesis.typ` veya bölüm dosyasında yardımcıları içe aktarabilirsiniz:
+Bu değerlerin tamamı `bolum/typ/iusosbil.typ` içinde tanımlıdır. Değişiklik yaparken bölüm dosyalarına değil oraya bakın.
+
+| Öğe | Kural |
+| --- | --- |
+| Kağıt / kenar | A4 — üst 4 cm, alt 2,5 cm, sol 4 cm, sağ 2,5 cm |
+| Gövde metni | Times New Roman, 12 pt, iki yana yaslı, 1,5 satır aralığı |
+| Paragraf girintisi | Her paragrafın ilk satırı 1 cm (boş satırlar dahil) |
+| Başlıklar | 14 pt kalın; 1. seviye ortalanır ve yeni sayfada başlar |
+| Başlık numaraları | `1`, `1.1`, `1.1.1` biçiminde otomatik |
+| Dipnotlar | 10 pt, tek satır; **her ana bölümde sayaç sıfırlanır** |
+| Transliterasyon blokları | 10–11 pt, tek satır (bkz. [Filolojik bloklar](#filolojik-transliterasyon-blokları)) |
+| Sayfa numarası | Alt orta; ön kısım Roma (`i`, `iii`…), metin Arap (`1`, `2`…) rakam |
+| Tırnaklar | Akıllı tırnak açık; kelime/nokta sonrası düz tırnak otomatik kapanışa çevrilir |
+
+Yalnızca **bir blok** için farklı değer gerekiyorsa o bloğun içine yerel ayar ekleyin:
 
 ```typst
-#import "iusosbil.typ": sumer, sup, translit, alef, ayin
+#[
+  #set text(size: 11pt)
+  #set par(leading: 1em)
+  Yalnızca bu paragrafı etkileyen ayarlar.
+]
 ```
 
-- `#sumer[LUGAL.GAL]`: Sümerogramı düz yazıyla gösterir.
-- `#sup[URU]`: Üst simge üretir. Örneğin `#sumer[KUR] #sup[URU]`.
-- `#translit[...]`: İtalik transliterasyon metni için kullanılır.
-- `#alef` ve `#ayin`: Mısırbilimde kullanılan özel işaretlerdir.
+## Yardımcı fonksiyonlar
 
-Sümerogramların italik görünmemesi için Sümerogramı `#sumer[...]` içine alın. Üst simgeyi ayrıca `#sup[...]` ile yazın; iki komutu tek bir metin parçasında gerektiği kadar birlikte kullanabilirsiniz.
+`iusosbil.typ` şu yardımcıları dışa aktarır:
+
+```typst
+#import "iusosbil.typ": *            // hepsi, ya da
+#import "iusosbil.typ": eb, hb, sup  // seçerek
+```
+
+| Fonksiyon | Ne yapar |
+| --- | --- |
+| `#translit[...]` | 11 pt italik transliterasyon metni; `[…]`, `⸢⸣`, `⟨⟩` işaretleri italikten çıkarılır. |
+| `#sup[...]` | Üst simge üretir (`super` ile aynıdır). Örnek: `#sup[1]` ya da ikili yazımda `URU#sup[2]`. |
+| `#hiero[𓂀]` | Hiyeroglif metnini **Aegyptus** fontuyla dizmek için. |
+| `#cunei[𒀀]` | Çivi yazısı metnini **Noto Sans Cuneiform** fontuyla dizmek için. |
+| `#tabletrule` | Tablo içi kısa yatay çizgi (uzunluk %40, kalınlık 0,5 pt). |
+| `kt` | Kapanış tırnağı (`”`) kısayolu. |
+
+## Filolojik transliterasyon blokları
+
+Dört hazır blok vardır; hepsi aynı yapıyı paylaşır: künye satırı → ayırıcı çizgi → transliterasyon → (varsa) Türkçe çeviri.
+
+| Fonksiyon | Dil / alan | Yazı tipi |
+| --- | --- | --- |
+| `#eb(...)` | Mısırca transliterasyon | Antinoou, 10 pt |
+| `#hb(...)` | Hititçe transliterasyon | Times New Roman, 10 pt |
+| `#yb(...)` | Eski Yunanca | Times New Roman, 10 pt |
+| `#lb(...)` | Latince (Leiden işaretleri) | Times New Roman, 10 pt |
+
+Ortak parametreler:
+
+- `b:` — eser / metin adı (künye 1. satır)
+- `m:` — yayın yeri, kolon, satır aralığı (künye 2. satır)
+- `s:` — satır numarası (künye 3. satır; `hb` dışında `sat.` öneki otomatik gelir)
+- `ceviri:` — Türkçe çeviri bloğu; bloğun soluna 1 cm kaydırılır
+
+```typst
+#eb(
+  b: "İbana oğlu Ahmosis Otobiyografisi",
+  m: "Urk. IV, 3.1-4.12",
+  s: "4.12",
+  ceviri: [ Çeviri metni buraya. ]
+)[
+  _ı͗ṯ.kwı͗ r pꜣ dpt mḥty ḥr ḳnn(.ı͗(??))_
+]
+```
+
+Bu bloklarda dipnotlar gizlenir (künye dipnotu çakışmasın diye), köşeli parantezler ve `⸢⸣`/`⟨⟩` gibi filolojik işaretler italik dışı yazılır — şablonun otomatik tırnak düzeltmeleri de devrede kalır.
+
+## Tablo, şekil ve çapraz referans
+
+Tablo ve şekiller `#figure(...)` ile tanımlanır; numaraları ve listeleri (Madde 14) otomatik üretilir. Metin içinde `<etiket>` ile işaretleyip `@etiket` ile çağırırsınız:
+
+```typst
+#figure(
+  caption: [Araştırmada İncelenen Değişkenlerin Dağılımı],
+  table(
+    columns: (1fr, 1fr, 1fr),
+    [*Kategori*], [*N*], [*Oran (%)*],
+    /* satır verileri */
+  )
+) <tab_degiskenler>
+
+@tab_degiskenler incelendiğinde, örneklem gruplarının dağılımı görülmektedir.
+```
+
+`@etiket` kullanımı hem tablo/şekil numarasını hem de sayfa numarasını metne yazar; elle numara yazmayın.
 
 ## Kaynakça
 
-Kaynakları `bolum/typ/kaynakca.bib` dosyasına ekleyin. Kaynakça görünümü `bibliyografi.typ` içinde düzenlenir. `thesis.typ` içindeki bibliyografya ekleme satırını silmeden veya çoğaltmadan kullanın.
+Kaynakları `bolum/typ/kaynakca.bib` dosyasına BibTeX biçiminde ekleyin:
+
+```bibtex
+@book{ornek2026,
+  author    = {Adı SOYADI},
+  title     = {Eserin Adı},
+  publisher = {Yayınevi},
+  address   = {İstanbul},
+  year      = {2026}
+}
+```
+
+Metinde kaynak göstermek için `@ornek2026` (veya `#cite(<ornek2026>)`) yazın. Görünüm `bibliyografi.typ` içinde tanımlıdır:
+
+```typst
+#bibliography(
+  "kaynakca.bib",
+  title: none,   // başlık elle eklendiği için gizli
+  style: "apa"   // asılı girintili APA
+)
+```
+
+- Liste **yalnızca metinde atıf yapılan kaynakları** gösterir. Tüm girdileri basmak için `full: true` ekleyin.
+- `title: none` satırını kaldırmayın; `KAYNAKÇA` başlığı `bibliyografi.typ` içinde elle eklenmiştir ve `outlined: true` olduğu için içindekilerde görünür.
+- Stili değiştirmek için Typst'in yerleşik CSL stillerinden birini yazın, örn. `style: "chicago-author-date"`.
+
+## Yeni bölüm ekleme
+
+1. `bolum/typ/chap_4.typ` gibi yeni bir dosya oluşturun.
+2. Başlığı `#heading(level: 1)[BÖLÜM BAŞLIĞI]` ile yazın — numara (`4`) otomatik gelir.
+3. Alt başlıklar için `level: 2`, `level: 3`, `level: 4` kullanın.
+4. Dosyayı `main.typ` içinde uygun sıraya ekleyin:
+
+```typst
+#include "chap_4.typ"
+```
+
+`level: 1` başlıkları zaten kendilerinden önce sayfa sonu uygular (`pagebreak(weak: true)`), ayrıca `#pagebreak()` yazmanıza gerek yoktur. Yine de bir bölümün ortasında zorla sayfa bölmek isterseniz `#pagebreak()` kullanabilirsiniz.
+
+> Madde 16/d: Giriş bölümü hariç tez **en az üç bölümden** oluşmalıdır.
 
 ## Derleme sorunlarını giderme
 
-Önce ana dosyayı derleyin ve hata satırını okuyun:
+Hata satırını okumak için kısa biçim kullanın:
 
 ```sh
-typst compile --diagnostic-format short bolum/typ/thesis.typ thesis.pdf
+typst compile --diagnostic-format short bolum/typ/main.typ main.pdf
 ```
 
-Sık görülen nedenler:
+| Belirti | Olası neden | Çözüm |
+| --- | --- | --- |
+| `file not found (searched at bolum/typ/...)` | Komut yanlış dizinden çalıştırıldı veya dosya adı yanlış | Kök dizinden `bolum/typ/main.typ` yolunu kullanın; ana dosya `thesis.typ` değil **`main.typ`**'dir. |
+| Yeni bölüm PDF'te görünmüyor | `#include` satırı eklenmedi | `main.typ` içine `#include "chap_4.typ"` ekleyin. |
+| `expected ...` / kapanmayan blok | Köşeli parantez `]` veya süslü parantez `}` eksik | Hata satırındaki dosya ve satır numarasını kontrol edin. |
+| `citation key ... is not present` | `@anahtar` bib dosyasında yok | Anahtarı `kaynakca.bib` içine ekleyin, yazımı (büyük/küçük harf) kontrol edin. |
+| `unknown font` uyarısı | Times New Roman / Antinoou / Aegyptus / Noto Sans Cuneiform kurulu değil | [Gereksinimler](#gereksinimler) bölümündeki fontları kurun. |
+| Listede olmayan kaynak basılıyor | `full: true` açık | `bibliyografi.typ` içinde `full: true` satırını kaldırın. |
+| İçindekiler / liste eski sayfayı gösteriyor | Tanıtımlar bayat | `typst watch` ile derleyin ya da PDF'i yeniden üretin. |
+| İki kez aynı bölüm | Aynı dosya iki kez `#include` edilmiş | `main.typ` içinde tekrar eden satırı silin. |
 
-- Yeni dosya `thesis.typ` içine `#include` edilmemiştir.
-- Köşeli parantez veya blok kapanışı eksiktir.
-- Üst simge için `#sup[...]` yerine kapanmamış bir komut kullanılmıştır.
-- Fontta bulunmayan özel karakter kullanılmıştır.
-- Aynı kaynakça veya bölüm iki kez eklenmiştir.
+## Geliştirme notları
 
-Değişikliklerden sonra PDF önizlemesini yenileyin. Editör otomatik derlemiyorsa komut satırından yukarıdaki `typst compile` komutunu çalıştırın.
-
-## Eski XeLaTeX kaynakları
-
-`bolum/tex/` klasörü önceki XeLaTeX sürümünü içerir. Typst sürümünde çalışırken esas alınacak dosyalar `bolum/typ/` altındadır; iki sürümde aynı değişikliği elle yapmak gerekebilir.
+- **Eski XeLaTeX sürümü artık bu depoda yok.** Depo adı geçmişi yansıtan `iu_sbe_latex` idi; XeLaTeX kaynakları silindi ve şablon tümüyle Typst'e taşındı.
+- **Uç birim çıktısı tutmaz.** `bolum/typ/*.pdf` derleme artıklarıdır ve `.gitignore` ile hariç tutulmuştur; commit etmeyin.
+- Kök dizindeki `main.pdf` ve `tez_hazırlama_yönergesi.pdf` kasıtlı olarak takip edilir.
+- Katkı için fork → branch → pull request akışı uygundur. Değişiklikten önce `typst compile` ile derlemenin başarılı olduğunu doğrulayın.
+- Yönerge değiştiğinde ilgili dosyadaki `// Madde ...` açıklamalarını güncelleyin; kod ile yönerge arasındaki bağın tek kaynağı onlardır.

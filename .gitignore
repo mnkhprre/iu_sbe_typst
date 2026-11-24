@@ -1,0 +1,8 @@
+# macOS
+.DS_Store
+
+# Typst derleme artıkları (kök dizindeki main.pdf takiplidir)
+bolum/typ/*.pdf
+
+# Yerel araç durumu
+state/
