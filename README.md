@@ -1,4 +1,4 @@
-# İstanbul Üniversitesi SBE Tez Projesi
+# İstanbul Üniversitesi SBE Tez Taslağı Projesi
 
 Bu proje, İstanbul Üniversitesi Sosyal Bilimler Enstitüsü tez yönergesine göre hazırlanmış Typst tez şablonudur. Eski XeLaTeX kaynakları `bolum/tex/` altında, güncel Typst kaynakları ise `bolum/typ/` altında bulunur.
 
