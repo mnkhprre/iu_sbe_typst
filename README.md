@@ -13,6 +13,7 @@
 
 - [Gereksinimler](#gereksinimler)
 - [Hızlı başlangıç](#hızlı-başlangıç)
+- [Tavsiye edilen program: Texpile](#tavsiye-edilen-program-texpile)
 - [Depo yapısı](#depo-yapısı)
 - [Belge akışı: `main.typ` sırası](#belge-akışı-maintyp-sırası)
 - [Yönerge madde eşlemesi](#yönerge-madde-eşlemesi)
@@ -57,13 +58,33 @@ Yalnızca hata denetimi yapmak, PDF üretmemek istiyorsanız çıktı olarak ge�
 typst compile --diagnostic-format short bolum/typ/main.typ /dev/null
 ```
 
-**Editör seçenekleri**
+**Diğer editör seçenekleri**
 
 - [VS Code + Tinymist Typst](https://github.com/Myriad-Dreamin/tinymist) veya [Typst Preview](https://github.com/enter-tainer/typst-preview): kaydettiğinizde canlı önizleme.
 - [typst.app](https://typst.app) web uygulaması: kurulum gerektirmez, dosyaları sürükleyip bırakabilirsiniz.
 - Komut satırı: yukarıdaki `watch` komutu yeterlidir.
 
 İlk derlemeden sonra kök dizinde `main.pdf` üretilir; repodaki [`main.pdf`](main.pdf) güncel şablonun örnek çıktısıdır.
+
+## Tavsiye edilen program: Texpile
+
+Bu şablonla çalışmak için önerdiğimiz düzenleyici [**Texpile**](https://texpile.com)'dir.
+
+> Texpile; **yerel ve çevrimdışı** çalışan, LaTeX ve **Typst** destekli ücretsiz bir düzenleyicidir ([AGPL-3.0](https://github.com/texpile/texpile), açık kaynak). Windows, macOS ve Linux'ta çalışır.
+
+Şablonu kullanırken işinizi kolaylaştıran özellikleri:
+
+| Özellik | Bu şablonda ne işe yarar |
+| --- | --- |
+| Yazarken güncellenen PDF önizlemesi | `main.typ` ve bölümleri düzenlerken çıktıyı anında görürsünüz. |
+| Çok dosyalı proje desteği | `#include` ile birleşen `iusosbil.typ`, `kapak.typ`, `chap_*.typ` dosyaları ana dosyanın makro ve tanımlarıyla birlikte çözümlenir. |
+| `@` ile etiket ve atıf tamamlama | `@tab_degiskenler`, `@fig_model` ve `kaynakca.bib` anahtarlarını listeler; bilinmeyen adı derlemeden önce işaretler. |
+| Canlı denetimler | Yazım anında tanımsız ad/etiket uyarısı verir, derlemeyi beklemez. |
+| Gömülü terminal | `typst compile` / `typst watch` komutlarını düzenleyiciden çalıştırabilirsiniz. |
+| Sürüm geçmişi | Değişiklikleri aşama, commit at ve yan yana diff al. |
+| Metin denetimi (imla) | Yazdığınız düz metni denetler; komut, matematik ve yorum satırlarını atlar. |
+
+İndirme: [texpile.com/download](https://texpile.com/download) — [Typst editörü dokümanları](https://texpile.com/typst-editor).
 
 ## Depo yapısı
 
