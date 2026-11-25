@@ -2,6 +2,7 @@
 
 [![Typst](https://img.shields.io/badge/Typst-%E2%89%A50.15-23B3A9?style=flat-square)](https://typst.app)
 [![Dil: Türkçe](https://img.shields.io/badge/dil-T%C3%BCrk%C3%A7e-2C2A25?style=flat-square)](#)
+[![Lisans: MIT](https://img.shields.io/badge/lisans-MIT-blue?style=flat-square)](LICENSE)
 [![Derleme: kararlı](https://img.shields.io/badge/derleme-ba%C5%9Far%C4%B1l%C4%B1-2E7D32?style=flat-square)](#h%C4%B1zl%C4%B1-ba%C5%9Flang%C4%B1%C3%A7)
 
 İstanbul Üniversitesi Sosyal Bilimler Enstitüsü (SBE) **tez hazırlama ve biçimlendirme yönergesine** göre hazırlanmış, [Typst](https://typst.app) ile çalışan tez şablonu. Şablon; ön kısım, metin kısmı, kaynakça, ekler ve özgeçmiş bölümlerini yönergedeki madde sırasına göre otomatik olarak üretir ve filoloji / mısıroloji / hititoloji çalışmaları için hazır transliterasyon blokları içerir.
@@ -25,6 +26,7 @@
 - [Yeni bölüm ekleme](#yeni-bölüm-ekleme)
 - [Derleme sorunlarını giderme](#derleme-sorunlarını-giderme)
 - [Geliştirme notları](#geliştirme-notları)
+- [Lisans](#lisans)
 
 ---
 
@@ -343,3 +345,9 @@ typst compile --diagnostic-format short bolum/typ/main.typ main.pdf
 - Kök dizindeki `main.pdf` ve `tez_hazırlama_yönergesi.pdf` kasıtlı olarak takip edilir.
 - Katkı için fork → branch → pull request akışı uygundur. Değişiklikten önce `typst compile` ile derlemenin başarılı olduğunu doğrulayın.
 - Yönerge değiştiğinde ilgili dosyadaki `// Madde ...` açıklamalarını güncelleyin; kod ile yönerge arasındaki bağın tek kaynağı onlardır.
+
+## Lisans
+
+Şablon kodu [MIT Lisansı](LICENSE) ile dağıtılır: kendi tezinizde serbestçe kullanabilir, değiştirebilir ve paylaşabilirsiniz. Tezinizin içeriği size aittir; lisans yalnızca şablon dosyalarını kapsar.
+
+Depodaki [`tez_hazırlama_yönergesi.pdf`](tez_hazırlama_yönergesi.pdf) İstanbul Üniversitesi Sosyal Bilimler Enstitüsü'ne aittir ve bu lisansın kapsamında değildir; yalnızca başvuru amacıyla eklenmiştir.
